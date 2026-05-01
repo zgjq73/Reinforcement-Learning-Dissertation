@@ -1,6 +1,6 @@
 # Reinforcement Learning Code — Undergraduate Dissertation
 
-A from-scratch implementation of seven reinforcement learning algorithms, written as the practical companion to my undergraduate mathematics dissertation.
+Dissertation implementation code used in dissertation
 
 ## Repository Layout
 The layout is the same structure as in the project with the gridworld showing implementations from chapter 3, acrobot reinforce showing implementations from chapter 4 and acrobot grpo_ppo showing implementations from chapter 6.
@@ -52,7 +52,7 @@ Same Acrobot environment, used for the GRPO ablation study in the final disserta
 
 ### Plots and data logging
 
-The data was logged live using wandb logging tool https://wandb.ai/site. This was used to analyse experiments as they were running, helping with correcting mistakes and monitoring progress. The raw data was then extracted from here to plot graphs.
+Training metrics were logged live throughout each run using Weights & Biases , which allowed experiments to be monitored as they progressed and any issues to be identified early. All figures presented in this chapter were exported directly from the W&B project dashboard.
 
 
 ### AI Declaration
