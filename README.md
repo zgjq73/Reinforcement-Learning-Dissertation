@@ -54,7 +54,8 @@ Same Acrobot environment, used for the GRPO ablation study in the final disserta
 
 Training metrics were logged live throughout each run using Weights & Biases , which allowed experiments to be monitored as they progressed and any issues to be identified early. All figures presented in this chapter were exported directly from the W&B project dashboard.
 
-## Appendix - Initial Prelim experiment - motivation for Acrobot Pivot
+## Appendix - Initial Preliminary experiment - motivation for Acrobot Pivot
+### RLVR Linear congruences
 
 The logged experiment for the finetuning test experiment was recorded on Wandb website.
 Here is the report for the prelim experiment if interested. 
