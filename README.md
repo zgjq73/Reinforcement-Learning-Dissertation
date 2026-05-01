@@ -71,13 +71,3 @@ The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing i
 ### `acrobot_grpo_ppo/` — GRPO and PPO
 
 Same Acrobot environment, used for the GRPO ablation study in the final dissertation chapter. GRPO is critic-free with group-relative advantages; PPO uses a learned value function and GAE.
-
-## Notes
-
-- Random seeds are set in every training script for reproducibility.
-- Hyperparameters appear at the top of each file as named constants.
-- No reinforcement-learning libraries (Stable-Baselines3, RLlib, etc.) were used — only NumPy, PyTorch, and Gymnasium.
-
-## License
-
-MIT — see `LICENSE`.
