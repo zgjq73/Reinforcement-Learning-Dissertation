@@ -1,6 +1,6 @@
 # Reinforcement Learning Code — Undergraduate Dissertation
 
-Dissertation implementation code. This repository includes the code for all of the experiments which were ran within my dissertation. We also included the results of an additional experiment which was provided in the appendix.
+Dissertation implementation code. This repository includes the code for all of the experiments which were ran within my dissertation. For completeness we also include the report and data logging of an additional experiment which was included at the end of the appendix.
 
 ## Reposity Contents
 The layout is the same structure as in the project with the gridworld showing implementations from chapter 3, acrobot reinforce showing implementations from chapter 4 and acrobot grpo_ppo showing implementations from chapter 6.
@@ -61,11 +61,11 @@ This initial experiment provided motivation for the pivot to applying GRPO in Ac
 The logged experiment for the GRPO with RLVR was recorded on Wandb website. 
 Results show agent was unable to reason under our limited budget. 
 
-By looking at the table in this report you can observe the recorded prompts and responses. 
+By looking at the table in this report you can observe the recorded training including prompts and responses. 
 The report seen in following link:
 https://wandb.ai/oscarztimms-durham-university/grpo-linear-congruence/reports/Prelim-experiments--VmlldzoxNjczNzMwOA
 
 
 ### AI Declaration
 
-Claude 4.5 used to, refactor, debug and improve the efficiency of code. Used to structure this repository and improve clarity by adding in comments.
+Claude 4.5 used to, refactor, debug and improve the efficiency of code in this dissertation. It was also to structure this repository and improve clarity by adding in comments.
