@@ -57,24 +57,32 @@ class PolicyNetwork(nn.Module):
 # GRPO agent and baseline hyperparams. Note that the the hyperparam values
 # were changed one at a time for the ablation
 # ============================================================
+# Ablation configurations run for the dissertation:
+    #   group_size:    4, 8 (baseline), 16, 32
+    #   clip_eps:      0.1, 0.2 (baseline), 0.3
+    #   kl_coef:       0.0, 0.01 (baseline), 0.04
+    #   entropy_coef:  0.0, 0.01 (baseline), 0.05
+# all ablations were ran across all five seeds.
 
 class GRPOAgent:
     def __init__(self, state_dim, action_dim, lr=0.002, group_size=8,
                  entropy_coef=0.01, gamma=0.99, clip_eps=0.2,
                  kl_coef=0.01, update_epochs=4, max_grad_norm=0.5,
                  ref_update_freq=5):
-        self.group_size = group_size
-        self.entropy_coef = entropy_coef
-        self.gamma = gamma
-        self.clip_eps = clip_eps
-        self.kl_coef = kl_coef
-        self.update_epochs = update_epochs
+        self.group_size = group_size            # G in the GRPO objective
+        self.entropy_coef = entropy_coef        # alpha_H the entropy coefficient
+        self.gamma = gamma                      # discount factor
+        self.clip_eps = clip_eps                # epsilon in the clip term
+        self.kl_coef = kl_coef                  # beta on the KL penalty
+        self.update_epochs = update_epochs      # K passes over each group
         self.max_grad_norm = max_grad_norm
-        self.ref_update_freq = ref_update_freq
+        self.ref_update_freq = ref_update_freq  # refresh pi_ref every N updates
         self.update_count = 0
-
+        
+        # Uses adam optimiser as defined in appendix
         self.policy_net = PolicyNetwork(state_dim, action_dim).to(DEVICE)
         self.optimizer = optim.Adam(self.policy_net.parameters(), lr=lr)
+                     
 
         # Frozen reference policy for the KL penalty
         self.ref_net = PolicyNetwork(state_dim, action_dim).to(DEVICE)
