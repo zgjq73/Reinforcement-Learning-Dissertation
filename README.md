@@ -53,3 +53,4 @@ Same Acrobot environment, used for the GRPO ablation study in the final disserta
 
 ### AI Declaration
 
+Claude 4.5 used to, refactor, debug and improve the efficiency of code. Used to structure this repository and improve clarity.
