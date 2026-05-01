@@ -54,7 +54,7 @@ Same Acrobot environment, used for the GRPO ablation study in the final disserta
 
 Training metrics were logged live throughout each run using Weights & Biases , which allowed experiments to be monitored as they progressed and any issues to be identified early. All figures presented in this chapter were exported directly from the W&B project dashboard.
 
-## Appendix - Preliminary GRPO Experiment -
+## Appendix - Preliminary GRPO Experiment
 ### Scaled down GRPO with RLVR Linear congruences report
 This initial experiment provided motivation for the pivot to applying GRPO in Acrobot environment.
 
