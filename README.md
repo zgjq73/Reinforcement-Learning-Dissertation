@@ -1,4 +1,4 @@
-# Reinforcement Learning Algorithms — Undergraduate Dissertation
+# Reinforcement Learning Code — Undergraduate Dissertation
 
 A from-scratch implementation of seven reinforcement learning algorithms, written as the practical companion to my undergraduate mathematics dissertation.
 
