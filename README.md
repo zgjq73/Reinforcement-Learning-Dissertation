@@ -1,6 +1,6 @@
 # Reinforcement Learning Code — Undergraduate Dissertation
 
-Dissertation implementation code used in dissertation
+Dissertation implementation code.
 
 ## Repository Layout
 The layout is the same structure as in the project with the gridworld showing implementations from chapter 3, acrobot reinforce showing implementations from chapter 4 and acrobot grpo_ppo showing implementations from chapter 6.
