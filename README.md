@@ -59,10 +59,10 @@ Training metrics were logged live throughout each run using Weights & Biases , w
 This initial experiment provided motivation for the pivot to applying GRPO in Acrobot environment.
 
 The logged experiment for the GRPO with RLVR was recorded on Wandb website. 
-Results show agent was unable to reason. Will notice the reward hacking by looking at the table.
+Results show agent was unable to reason under our limited budget. 
 
-By looking at the table you can observe the recorded prompts and responses. 
-The report seen in following link
+By looking at the table in this report you can observe the recorded prompts and responses. 
+The report seen in following link:
 https://wandb.ai/oscarztimms-durham-university/grpo-linear-congruence/reports/Prelim-experiments--VmlldzoxNjczNzMwOA
 
 
