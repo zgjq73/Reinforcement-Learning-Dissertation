@@ -22,7 +22,8 @@ from networks import PolicyNetwork, ValueNetwork
 # HYPERPARAMETERS
 # ============================================================
 
-SEED         = 42
+# Seeds were varied between: 42, 123, 99, 10, 7
+SEED = 42
 EPISODES     = 500
 LEARNING_RATE = 0.005
 GAMMA        = 0.99
