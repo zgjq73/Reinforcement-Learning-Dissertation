@@ -53,7 +53,7 @@ Same Acrobot environment, used for the GRPO ablation study in the final disserta
 
 ### Plots and data logging
 
-The data was logged live using W&B logging tool. The raw data was then extracted from here to plot graphs.
+The data was logged live using wandb logging tool https://wandb.ai/site. This was used to analyse experiments as they were running, helping with correcting mistakes and monitoring progress. The raw data was then extracted from here to plot graphs.
 
 
 ### AI Declaration
