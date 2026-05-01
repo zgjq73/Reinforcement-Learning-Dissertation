@@ -64,7 +64,7 @@ Results show agent was unable to reason under our limited budget.
 
 By looking at the table in this report you can observe the recorded training including prompts and responses. 
 The report seen in following link:
-https://wandb.ai/oscarztimms-durham-university/grpo-linear-congruence/reports/Prelim-experiments--VmlldzoxNjczNzMwOA
+[https://wandb.ai/oscarztimms-durham-university/grpo-linear-congruence/reports/Prelim-experiments--VmlldzoxNjczNzMwOA](https://api.wandb.ai/links/oscarztimms-durham-university/2wwz42wv)
 
 
 ### AI Declaration
