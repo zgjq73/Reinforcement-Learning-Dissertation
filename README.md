@@ -60,13 +60,3 @@ python -m experiments.train_grpo_ppo
 ```
 
 Each training script saves its reward history to a `.npy` file in the project root, ready for plotting.
-
-## Notes
-
-- Random seeds are set in every training script for reproducibility.
-- Hyperparameters live at the top of each experiment file as named constants.
-- The tabular environment (`MarioEnvironment`) and helper policies are defined once in `src/tabular/` and imported where needed — no duplication between the Monte Carlo and TD scripts.
-
-## License
-
-MIT — see `LICENSE`.
