@@ -9,8 +9,6 @@ The repository is organised into three self-contained experiments, one per disse
 ```
 rl-dissertation/
 ├── README.md
-├── LICENSE
-├── requirements.txt
 │
 ├── gridworld/              ← Tabular methods on a 5x5 grid
 │   ├── environment.py      ← The gridworld (lava, wind, goal)
@@ -38,25 +36,6 @@ rl-dissertation/
 | `acrobot_reinforce/` | Actor-Critic | Acrobot-v1 |
 | `acrobot_grpo_ppo/` | GRPO | Acrobot-v1 |
 | `acrobot_grpo_ppo/` | PPO | Acrobot-v1 |
-
-## Quick Start
-
-```bash
-# 1. Clone
-git clone https://github.com/<your-username>/rl-dissertation.git
-cd rl-dissertation
-
-# 2. Install dependencies (Python 3.10+)
-pip install -r requirements.txt
-
-# 3. Run any experiment
-python gridworld/monte_carlo.py
-python gridworld/td_methods.py
-python acrobot_reinforce/reinforce.py
-python acrobot_grpo_ppo/grpo_ppo.py
-```
-
-Each script prints progress as it trains and saves a `.npy` file with the per-episode reward history when finished.
 
 ## The Three Experiments
 
