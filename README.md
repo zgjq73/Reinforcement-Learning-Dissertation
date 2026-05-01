@@ -3,8 +3,7 @@
 A from-scratch implementation of seven reinforcement learning algorithms, written as the practical companion to my undergraduate mathematics dissertation.
 
 ## Repository Layout
-
-The repository is organised into three self-contained experiments, one per dissertation chapter. Each folder runs independently — you can `cd` into any one of them and run its scripts without touching the others.
+The layout is the same structure as in the project with the gridworld showing implementations from chapter 3, acrobot reinforce showing implementations from chapter 4 and acrobot grpo_ppo showing implementations from chapter 6.
 
 ```
 rl-dissertation/
