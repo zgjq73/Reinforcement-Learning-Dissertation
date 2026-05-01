@@ -1,5 +1,7 @@
 """Action selection policies for tabular Q-learning methods."""
 
+# greedy policy and epislon greedy policy functions
+
 import random
 import numpy as np
 
