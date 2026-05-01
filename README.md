@@ -50,9 +50,17 @@ The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing i
 
 Same Acrobot environment, used for the GRPO ablation study in the final dissertation chapter. GRPO is critic-free with group-relative advantages; PPO uses a learned value function and GAE.
 
-### Plots and data logging
+### Plots and Data logging
 
 Training metrics were logged live throughout each run using Weights & Biases , which allowed experiments to be monitored as they progressed and any issues to be identified early. All figures presented in this chapter were exported directly from the W&B project dashboard.
+
+### Extra preliminary RLVR experiment which was included in appendix
+
+The logged experiment for the finetuning test experiment was recorded on Wandb website.
+Here is the report for the prelim experiment if interested. 
+Results show agent was unable to reason. Will notice the reward hacking by looking at the table.
+By looking at the table you can observe the recorded prompts and responses
+https://wandb.ai/oscarztimms-durham-university/grpo-linear-congruence/reports/Prelim-experiments--VmlldzoxNjczNzMwOA
 
 
 ### AI Declaration
