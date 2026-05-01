@@ -54,11 +54,10 @@ Same Acrobot environment, used for the GRPO ablation study in the final disserta
 
 Training metrics were logged live throughout each run using Weights & Biases , which allowed experiments to be monitored as they progressed and any issues to be identified early. All figures presented in this chapter were exported directly from the W&B project dashboard.
 
-## Appendix - Preliminary GRPO experiment - motivation for Pivot to Acrobot
-### RLVR Linear congruences report
+## Appendix - Preliminary GRPO Experiment - motivation for Pivot to Acrobot
+### Scaled down GRPO with RLVR Linear congruences report
 
-The logged experiment for the finetuning test experiment was recorded on Wandb website.
-Here is the report for the prelim experiment if interested. 
+The logged experiment for the GRPO with RLVR was recorded on Wandb website. 
 Results show agent was unable to reason. Will notice the reward hacking by looking at the table.
 
 By looking at the table you can observe the recorded prompts and responses
