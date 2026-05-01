@@ -39,15 +39,15 @@ rl-dissertation/
 
 ## The Three Experiments
 
-### `gridworld/` — Tabular Methods
+### `gridworld/` — Tabular Methods - Chapter 3
 
 A 5×5 grid where the agent must reach the goal while avoiding lava pits. A 20% "wind" chance redirects the agent's action to a random direction, making the environment stochastic. Used to compare three classic tabular methods, in particular to surface the cautious-vs-aggressive distinction between SARSA and Q-Learning.
 
-### `acrobot_reinforce/` — REINFORCE Family
+### `acrobot_reinforce/` — REINFORCE Family - Chapter 4
 
 The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing its tip above a target height. State is six-dimensional and continuous, actions are three discrete torques. A single `UniversalAgent` class handles all three policy-gradient variants by switching on a `mode` argument.
 
-### `acrobot_grpo_ppo/` — GRPO and PPO
+### `acrobot_grpo_ppo/` — GRPO and PPO - Chapter 6
 
 Same Acrobot environment, used for the GRPO ablation study in the final dissertation chapter. GRPO is critic-free with group-relative advantages; PPO uses a learned value function and GAE.
 
