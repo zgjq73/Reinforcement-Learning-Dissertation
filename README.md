@@ -49,7 +49,7 @@ The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing i
 ### `acrobot_grpo_ppo/` — GRPO ablation and PPO run - Chapter 6
 
 Same Acrobot environment, used for the GRPO ablation study in the final dissertation chapter. GRPO is critic-free with group-relative advantages; PPO uses a learned value function and GAE.
-Plots report ([https://wandb.ai/oscarztimms-durham-university/grpo_ablation/reports/GRPO-Ablation--VmlldzoxNjczNzU4NA](https://api.wandb.ai/links/oscarztimms-durham-university/fzvo4rpt))
+Plots report for the learning curves for each ablation and PPO: ([https://wandb.ai/oscarztimms-durham-university/grpo_ablation/reports/GRPO-Ablation--VmlldzoxNjczNzU4NA](https://api.wandb.ai/links/oscarztimms-durham-university/fzvo4rpt))
 
 ## Plots and Data logging
 
