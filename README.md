@@ -1,6 +1,6 @@
 # Reinforcement Learning Code — Undergraduate Dissertation
 
-Dissertation implementation code.
+Dissertation implementation code. This repository includes the code for all of the experiments which were ran within my dissertation. We also included the results of an additional experiment which was provided in the appendix.
 
 ## Reposity Contents
 The layout is the same structure as in the project with the gridworld showing implementations from chapter 3, acrobot reinforce showing implementations from chapter 4 and acrobot grpo_ppo showing implementations from chapter 6.
