@@ -57,4 +57,4 @@ Training metrics were logged live throughout each run using Weights & Biases , w
 
 ### AI Declaration
 
-Claude 4.5 used to, refactor, debug and improve the efficiency of code. Used to structure this repository and improve clarity.
+Claude 4.5 used to, refactor, debug and improve the efficiency of code. Used to structure this repository and improve clarity by adding in comments.
