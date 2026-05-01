@@ -124,13 +124,16 @@ class GRPOAgent:
 
         with torch.no_grad():
             ref_probs = self.ref_net(flat_states)
-
+            
+        # Step 2: K epochs of gradient updates on the GRPO objective defined in chapter 5. Note entropy added directly to entropy term.
         for _ in range(self.update_epochs):
             probs = self.policy_net(flat_states)
             dist = torch.distributions.Categorical(probs)
             new_log_probs = dist.log_prob(flat_actions)
             entropy = dist.entropy()
 
+            # clipped surogate using epislon value (baseline 0.2)
+            
             ratios = torch.exp(new_log_probs - flat_old_log_probs)
             surr1 = ratios * advantages_tensor
             surr2 = torch.clamp(ratios, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * advantages_tensor
@@ -149,43 +152,55 @@ class GRPOAgent:
             torch.nn.utils.clip_grad_norm_(self.policy_net.parameters(), self.max_grad_norm)
             self.optimizer.step()
 
-        # Periodically refresh the reference policy
+        # Periodically refresh the reference policy 
         self.update_count += 1
         if self.update_count % self.ref_update_freq == 0:
             self.ref_net.load_state_dict(self.policy_net.state_dict())
 
 
 # ============================================================
-# PPO agent and hyperparams
+# PPO
 # ============================================================
-
+ 
 class PPOAgent:
+    # PPO uses the same clipped surrogate as GRPO but computes per-step
+    # advantages from a learned value function V_w(s) using GAE,
+    # rather than a single per-episode group-relative advantage.
+ 
     def __init__(self, state_dim, action_dim, lr=0.002, gamma=0.99,
                  gae_lambda=0.95, clip_eps=0.2, entropy_coef=0.01,
                  value_coef=0.5, update_epochs=4, max_grad_norm=0.5,
                  minibatch_size=64):
         self.gamma = gamma
-        self.gae_lambda = gae_lambda
+        self.gae_lambda = gae_lambda            # lambda in GAE
         self.clip_eps = clip_eps
         self.entropy_coef = entropy_coef
-        self.value_coef = value_coef
+        self.value_coef = value_coef            # weight on the critic loss
         self.update_epochs = update_epochs
         self.max_grad_norm = max_grad_norm
         self.minibatch_size = minibatch_size
-
+ 
+        # Actor: same architecture as GRPO for fair comparison.
         self.policy_net = PolicyNetwork(state_dim, action_dim).to(DEVICE)
+ 
+        # Critic V_w(s): an extra network mapping state -> scalar value.
+        # Doubles the parameter count vs GRPO but provides per-step
+        # advantage estimates instead of one number per episode.
         self.value_net = nn.Sequential(
             nn.Linear(state_dim, 64), nn.Tanh(),
             nn.Linear(64, 64), nn.Tanh(),
             nn.Linear(64, 1),
         ).to(DEVICE)
-
+ 
+        # Single optimiser updates both networks jointly.
         self.optimizer = optim.Adam(
             list(self.policy_net.parameters()) + list(self.value_net.parameters()),
             lr=lr,
         )
-
+ 
     def get_action(self, state):
+        # Forward both networks: the actor gives action probabilities,
+        # the critic gives a value estimate V_w(s) used later in GAE.
         state_tensor = torch.FloatTensor(state).unsqueeze(0).to(DEVICE)
         with torch.no_grad():
             probs = self.policy_net(state_tensor)
@@ -193,13 +208,25 @@ class PPOAgent:
         dist = torch.distributions.Categorical(probs)
         action = dist.sample()
         return action.item(), dist.log_prob(action).cpu(), value.item()
-
+ 
     def compute_gae(self, rewards, values, dones):
-        """Generalised Advantage Estimation."""
+        """
+        Generalised Advantage Estimation recursive rule defined at end of chapter 4
+ 
+        At each step computes the TD residual
+            delta_t = r_t + gamma * V(s_{t+1}) - V(s_t)
+        then forms the advantage as a discounted sum of future deltas:
+            A_t = delta_t + (gamma * lambda) * delta_{t+1} + ...
+ 
+        lambda=0.95 used as standard.
+        """
         advantages = []
         gae = 0.0
         next_value = 0.0
+        # Iterate backwards so each step's advantage can use the next.
         for t in reversed(range(len(rewards))):
+            # When an episode ends, reset the bootstrap value and GAE
+            # accumulator so that advantages don't leak across episodes.
             if dones[t]:
                 next_value = 0.0
                 gae = 0.0
@@ -207,74 +234,89 @@ class PPOAgent:
             gae = delta + self.gamma * self.gae_lambda * gae
             advantages.insert(0, gae)
             next_value = values[t]
+        # Returns = advantage + value, used as the regression target
+        # for the critic loss.
         returns = [adv + val for adv, val in zip(advantages, values)]
         return advantages, returns
-
+ 
     def update(self, states, actions, log_probs, rewards, values, dones):
+        # Compute per-step advantages and value targets via GAE defined in chapter 4.
         advantages, returns = self.compute_gae(rewards, values, dones)
-
+ 
         states_t = torch.FloatTensor(np.array(states)).to(DEVICE)
         actions_t = torch.tensor(actions, dtype=torch.long).to(DEVICE)
         old_log_probs_t = torch.cat(log_probs).to(DEVICE)
         advantages_t = torch.tensor(advantages, dtype=torch.float32).to(DEVICE)
         returns_t = torch.tensor(returns, dtype=torch.float32).to(DEVICE)
-
+ 
+        # Standardise advantages for variance reduction — a common PPO trick
+        # that does NOT change the optimal policy but stabilises gradients.
         advantages_t = (advantages_t - advantages_t.mean()) / (advantages_t.std() + 1e-8)
-
+ 
         all_params = list(self.policy_net.parameters()) + list(self.value_net.parameters())
-
+ 
+        # K epochs over the data, with random minibatches per epoch.
         for _ in range(self.update_epochs):
             indices = np.random.permutation(len(states))
             for start in range(0, len(states), self.minibatch_size):
                 mb = indices[start:start + self.minibatch_size]
-
+ 
+                # Re-evaluate the current policy and value function on this minibatch.
                 probs = self.policy_net(states_t[mb])
                 dist = torch.distributions.Categorical(probs)
                 new_log = dist.log_prob(actions_t[mb])
                 entropy = dist.entropy()
                 values_pred = self.value_net(states_t[mb]).squeeze(-1)
-
+ 
+                # Importance ratio R = pi_theta / pi_theta_old, same as GRPO.
                 ratios = torch.exp(new_log - old_log_probs_t[mb])
                 surr1 = ratios * advantages_t[mb]
                 surr2 = torch.clamp(ratios, 1 - self.clip_eps, 1 + self.clip_eps) * advantages_t[mb]
+                # Negative because we minimise the loss but maximise the surrogate.
                 policy_loss = -torch.min(surr1, surr2).mean()
+ 
+                # Critic loss: MSE between predicted V_w(s) and the GAE return target.
                 value_loss = F.mse_loss(values_pred, returns_t[mb])
-
+ 
+                # Combined PPO loss: actor loss + critic loss - entropy bonus.
                 loss = policy_loss + self.value_coef * value_loss - self.entropy_coef * entropy.mean()
-
+ 
                 self.optimizer.zero_grad()
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(all_params, self.max_grad_norm)
                 self.optimizer.step()
-
-
+ 
+ 
 # ============================================================
 # Training entry points
 # ============================================================
-
+ 
 def train_grpo(episodes=EPISODES, seed=SEED):
+    """Train GRPO and return per-episode total rewards (used for plotting)."""
     torch.manual_seed(seed)
     np.random.seed(seed)
-
+ 
     env = gym.make('Acrobot-v1')
-    state_dim = env.observation_space.shape[0]
-    action_dim = env.action_space.n
-
+    state_dim = env.observation_space.shape[0]   # 6
+    action_dim = env.action_space.n              # 3
     agent = GRPOAgent(state_dim, action_dim)
     all_scores = []
-
+ 
+    # Outer loop: keep collecting groups until we hit the episode budget.
     while len(all_scores) < episodes:
+        # One group = G episodes rolled out under the same policy.
         group_states, group_actions, group_rewards, group_log_probs = [], [], [], []
-
+ 
         for _ in range(agent.group_size):
             if len(all_scores) >= episodes:
                 break
-
+ 
+            # Roll out a single episode under the current pi_theta.
             state, _ = env.reset(seed=seed + len(all_scores))
             done = False
             ep_states, ep_actions, ep_rewards, ep_log_probs = [], [], [], []
             score = 0
-
+ 
             while not done:
                 action, log_prob = agent.get_action(state)
                 next_state, reward, terminated, truncated, _ = env.step(action)
@@ -285,41 +327,45 @@ def train_grpo(episodes=EPISODES, seed=SEED):
                 ep_log_probs.append(log_prob)
                 score += reward
                 state = next_state
-
+ 
             group_states.append(ep_states)
             group_actions.append(ep_actions)
             group_rewards.append(ep_rewards)
             group_log_probs.append(ep_log_probs)
             all_scores.append(score)
-
+ 
+        # Once the group is full, do one GRPO update across all G episodes.
         if len(group_rewards) > 1:
             agent.update(group_states, group_actions, group_log_probs, group_rewards)
-
+ 
     env.close()
     return all_scores
-
-
+ 
+ 
 def train_ppo(episodes=EPISODES, seed=SEED, collect_steps=2048):
+    """Train PPO and return per-episode total rewards."""
     torch.manual_seed(seed)
     np.random.seed(seed)
-
+ 
     env = gym.make('Acrobot-v1')
     state_dim = env.observation_space.shape[0]
     action_dim = env.action_space.n
-
     agent = PPOAgent(state_dim, action_dim)
     all_scores = []
     ep_count = 0
-
+ 
+    # PPO collects a fixed number of *steps* per update (not episodes),
+    # which may span partial or multiple episodes.
     while ep_count < episodes:
         states, actions, log_probs, rewards, values, dones = [], [], [], [], [], []
         steps_collected = 0
-
+ 
+        # Keep rolling out episodes until we have ~collect_steps transitions.
         while steps_collected < collect_steps and ep_count < episodes:
             state, _ = env.reset(seed=seed + ep_count)
             done = False
             score = 0
-
+ 
             while not done:
                 action, log_prob, value = agent.get_action(state)
                 next_state, reward, terminated, truncated, _ = env.step(action)
@@ -333,28 +379,29 @@ def train_ppo(episodes=EPISODES, seed=SEED, collect_steps=2048):
                 score += reward
                 state = next_state
                 steps_collected += 1
-
+ 
             ep_count += 1
             all_scores.append(score)
-
+ 
+        # One PPO update per collected batch.
         if len(states) > 0:
             agent.update(states, actions, log_probs, rewards, values, dones)
-
+ 
     env.close()
     return all_scores
-
-
+ 
+ 
 def main():
     print("Training GRPO...")
     grpo_scores = train_grpo()
     np.save("grpo_scores.npy", np.array(grpo_scores))
     print(f"Saved {len(grpo_scores)} episode scores to grpo_scores.npy")
-
+ 
     print("Training PPO...")
     ppo_scores = train_ppo()
     np.save("ppo_scores.npy", np.array(ppo_scores))
     print(f"Saved {len(ppo_scores)} episode scores to ppo_scores.npy")
-
-
+ 
+ 
 if __name__ == "__main__":
     main()
