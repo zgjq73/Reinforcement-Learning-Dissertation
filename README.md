@@ -51,6 +51,11 @@ The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing i
 
 Same Acrobot environment, used for the GRPO ablation study in the final dissertation chapter. GRPO is critic-free with group-relative advantages; PPO uses a learned value function and GAE.
 
+### Plots and data logging
+
+The data was logged live using W&B logging tool. The raw data was then extracted from here to plot graphs.
+
+
 ### AI Declaration
 
 Claude 4.5 used to, refactor, debug and improve the efficiency of code. Used to structure this repository and improve clarity.
