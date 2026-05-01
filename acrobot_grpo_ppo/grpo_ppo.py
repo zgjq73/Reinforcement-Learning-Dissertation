@@ -25,7 +25,8 @@ import gymnasium as gym
 # HYPERPARAMETERS
 # ============================================================
 
-SEED     = 42
+# Seeds used in the dissertation: 42, 123, 99, 10, 7
+SEED = 42
 EPISODES = 500
 DEVICE   = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
