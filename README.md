@@ -1,6 +1,6 @@
 # Reinforcement Learning Code — Undergraduate Dissertation
 
-Dissertation implementation code. This repository includes the code for all of the experiments which were ran within my dissertation. For completeness we also include the report and data logging of an additional experiment which was included at the end of the appendix.
+Dissertation implementation code. This repository includes the code for all of the experiments which were ran within my dissertation. For completeness we also include the report and data logging of the additional experiment which was included at the end of the appendix.
 
 ## Reposity Contents
 The layout is the same structure as in the project with the gridworld showing implementations from chapter 3, acrobot reinforce showing implementations from chapter 4 and acrobot grpo_ppo showing implementations from chapter 6.
@@ -44,9 +44,9 @@ A 5×5 grid where the agent must reach the goal while avoiding lava pits. A 20% 
 
 ### `acrobot_reinforce/` — REINFORCE Family - Chapter 4
 
-The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing its tip above a target height. State is six-dimensional and continuous, actions are three discrete torques. A single `UniversalAgent` class handles all three policy-gradient variants by switching on a `mode` argument.
+The Acrobot-v1 environment from Gymnasium: a two-link pendulum that must swing its tip above a target height. State is six-dimensional and continuous, actions are three discrete torques. A single `UniversalAgent` class is used for all three policy-gradient variants.
 
-### `acrobot_grpo_ppo/` — GRPO and PPO - Chapter 6
+### `acrobot_grpo_ppo/` — GRPO ablation and PPO run - Chapter 6
 
 Same Acrobot environment, used for the GRPO ablation study in the final dissertation chapter. GRPO is critic-free with group-relative advantages; PPO uses a learned value function and GAE.
 
