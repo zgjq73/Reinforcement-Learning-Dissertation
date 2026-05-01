@@ -31,6 +31,13 @@ EPISODES = 500
 DEVICE   = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
+# ============================================================
+# POLICY NETWORK (shared by GRPO and PPO)
+# ============================================================
+# Feedforward network mapping state -> action probabilities pi_theta(a|s).
+# 6 inputs (Acrobot state), 3 outputs (left, zero, right torque),
+# two hidden layers of 64 units with tanh activations.
+
 class PolicyNetwork(nn.Module):
     """Tanh-MLP policy. Shared by both agents for fair comparison."""
 
@@ -47,7 +54,8 @@ class PolicyNetwork(nn.Module):
 
 
 # ============================================================
-# GRPO
+# GRPO agent and baseline hyperparams. Note that the the hyperparam values
+# were changed one at a time for the ablation
 # ============================================================
 
 class GRPOAgent:
@@ -140,7 +148,7 @@ class GRPOAgent:
 
 
 # ============================================================
-# PPO
+# PPO agent and hyperparams
 # ============================================================
 
 class PPOAgent:
